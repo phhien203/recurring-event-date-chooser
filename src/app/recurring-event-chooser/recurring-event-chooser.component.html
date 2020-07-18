@@ -1,0 +1,184 @@
+<h3 class="text-center mt-3">Recurring event date chooser</h3>
+<div [formGroup]="recurringForm" class="p-5 m-auto">
+  <div class="form-group mb-1 font-weight-bold">
+    <label>Date range</label>
+  </div>
+
+  <div class="form-inline mb-2">
+    <div class="form-group hidden">
+      <input
+        name="datepicker"
+        class="form-control"
+        ngbDatepicker
+        outsideDays="hidden"
+        #datepicker="ngbDatepicker"
+        [autoClose]="'outside'"
+        [displayMonths]="2"
+        [dayTemplate]="t"
+        [startDate]="f['startDate'].value!"
+        (dateSelect)="onDateSelection($event)"
+      >
+      <div class="input-group">
+        <ng-template #t let-date let-focused="focused">
+        <span
+          class="custom-day"
+          [class.focused]="focused"
+          [class.range]="isRange(date)"
+          [class.faded]="isHovered(date) || isInside(date)"
+          (mouseenter)="hoveredDate = date"
+          (mouseleave)="hoveredDate = null"
+        >
+          {{ date['day'] }}
+        </span>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <input
+          class="form-control"
+          name="dpFromDate"
+          placeholder="yyyy-mm-dd"
+          #dpFromDate
+          [value]="formatter.format(f['startDate'].value)"
+          (input)="setStartDate(dpFromDate.value)"
+        >
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group ml-2">
+      <div class="input-group">
+        <input #dpToDate
+               class="form-control" placeholder="yyyy-mm-dd"
+               name="dpToDate"
+               [value]="formatter.format(f['endDate'].value)"
+               (input)="setEndDate(dpToDate.value)">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group mb-1">
+    <label class="font-weight-bold">Frequency</label>
+  </div>
+
+  <div class="form-group">
+    <div class="custom-control custom-radio custom-control-inline">
+      <input
+        class="custom-control-input"
+        type="radio"
+        id="daily"
+        checked
+        formControlName="frequency"
+        [value]="Frequency.DAILY"
+      />
+      <label
+        class="custom-control-label form-check-label"
+        for="daily"
+      >
+        Daily
+      </label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input
+        class="custom-control-input"
+        type="radio"
+        id="weekly"
+        formControlName="frequency"
+        [value]="Frequency.WEEKLY"
+      />
+      <label
+        class="custom-control-label form-check-label"
+        for="weekly"
+      >
+        Weekly
+      </label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input
+        class="custom-control-input"
+        type="radio"
+        id="monthly"
+        formControlName="frequency"
+        [value]="Frequency.MONTHLY"
+      />
+      <label
+        class="custom-control-label form-check-label"
+        for="monthly"
+      >
+        Monthly
+      </label>
+    </div>
+  </div>
+
+  <ng-container *ngIf="f.frequency.value === Frequency.WEEKLY">
+    <div class="form-group mb-1">
+      <label class="font-weight-bold">Repeat on</label>
+    </div>
+
+    <div class="btn-group btn-group-toggle mb-2" formArrayName="onWeekday">
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="0" ngbButton> Mon
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="1" ngbButton> Tue
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="2" ngbButton> Wed
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="3" ngbButton> Thu
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="4" ngbButton> Fri
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="5" ngbButton> Sat
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="6" ngbButton> Sun
+      </label>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="f.frequency.value === Frequency.MONTHLY">
+    <div class="form-group">
+      <label class="font-weight-bold" for="onMonthday">On monthday</label>
+      <div class="input-group" style="width: 250px;">
+        <input
+          id="onMonthday"
+          class="form-control"
+          placeholder="yyyy-mm-dd"
+          name="dp"
+          formControlName="onMonthday"
+          ngbDatepicker
+          #d="ngbDatepicker"
+        >
+        <div class="input-group-append">
+          <button
+            type="button"
+            class="btn btn-outline-secondary calendar"
+            (click)="d.toggle()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="form-group">
+    <div class="form-control-plaintext">
+      <p class="font-weight-bold">Number of occurrences: {{ dates.length }}</p>
+      <p class="font-weight-bold">Dates</p>
+      <span class="d-inline-block mr-3" *ngFor="let date of dates">
+        {{ date | date:'yyyy-MM-dd' }}
+      </span>
+    </div>
+  </div>
+</div>
