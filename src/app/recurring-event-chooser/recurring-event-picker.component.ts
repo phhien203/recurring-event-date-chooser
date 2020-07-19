@@ -11,10 +11,10 @@ export function toNativeDate(ngbDate: NgbDate): Date {
 
 @Component({
   selector: 'app-recurring-event-chooser',
-  templateUrl: './recurring-event-chooser.component.html',
-  styleUrls: ['./recurring-event-chooser.component.scss']
+  templateUrl: './recurring-event-picker.component.html',
+  styleUrls: ['./recurring-event-picker.component.scss']
 })
-export class RecurringEventChooserComponent implements OnInit, OnDestroy {
+export class RecurringEventPickerComponent implements OnInit, OnDestroy {
   Frequency = Frequency;
   recurringForm: FormGroup;
   hoveredDate: NgbDate | null = null;
